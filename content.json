@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-07-29T09:31:41.279Z",
+  "updatedAt": "2026-07-29T09:31:45.644Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -70,7 +70,7 @@
       "fontSize": "32px"
     },
     "s14-t2": {
-      "html": "空间叙事<br>是一套设计方法论"
+      "html": "空间叙事是<div>一套设计方法论</div>"
     }
   },
   "images": {}
