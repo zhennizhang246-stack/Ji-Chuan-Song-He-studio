@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-07-29T09:28:27.363Z",
+  "updatedAt": "2026-07-29T09:28:35.711Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -62,7 +62,7 @@
       "html": "SXJ MX ZMJ"
     },
     "s13-t1": {
-      "html": "不同的项目，<br><span style=\"color:var(--accent)\">有一种方法</span>"
+      "html": "不同的项目，<br><span style=\"color:var(--accent)\">有不同的方法</span>"
     }
   },
   "images": {}
