@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-07-29T09:21:45.340Z",
+  "updatedAt": "2026-07-29T09:21:50.045Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -40,7 +40,8 @@
     },
     "s1-t2": {
       "x": 19.665,
-      "y": 0.109
+      "y": 0.109,
+      "html": "纪川松禾<br><span style=\"font-style:italic;font-weight:300\">&nbsp;空间叙事</span>"
     }
   },
   "images": {}
