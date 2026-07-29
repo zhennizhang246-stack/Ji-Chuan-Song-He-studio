@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-29T07:41:47.105Z",
+  "updatedAt": "2026-07-29T07:44:46.673Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -8,6 +8,10 @@
     "s4-t3": {
       "html": "Listen 倾听",
       "color": "#002fa7"
+    },
+    "s16-t7": {
+      "html": "反差",
+      "color": "#5b7bf8"
     }
   },
   "images": {}
