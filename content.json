@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-29T07:44:51.039Z",
+  "updatedAt": "2026-07-29T07:45:02.118Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -11,6 +11,10 @@
     },
     "s16-t7": {
       "html": "反差",
+      "color": "#5b7bff"
+    },
+    "s16-t6": {
+      "html": "— 02 / CONTRAST",
       "color": "#5b7bff"
     }
   },
