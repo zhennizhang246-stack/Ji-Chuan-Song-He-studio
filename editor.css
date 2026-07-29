@@ -8,7 +8,7 @@
 #owner-editor-panel,
 #owner-editor-auth,
 #owner-editor-toast {
-  font-family: "Inter", "Microsoft YaHei UI", sans-serif;
+  font-family: var(--sans), var(--sans-zh);
 }
 
 #owner-editor-launch {
@@ -111,6 +111,12 @@
   color: #fff;
 }
 
+.oe-btn.active {
+  border-color: var(--editor-blue);
+  background: var(--editor-blue);
+  color: #fff;
+}
+
 .oe-token-help {
   display: block;
   margin-top: 10px;
@@ -177,6 +183,25 @@
   cursor: text;
   outline: 1px dashed rgba(0, 47, 167, .42);
   outline-offset: 3px;
+}
+
+[data-owner-movable="true"] {
+  translate: var(--owner-x, 0) var(--owner-y, 0);
+}
+
+.owner-editing [data-owner-graphic="true"] {
+  outline: 1px dashed rgba(0, 47, 167, .42);
+  outline-offset: 4px;
+}
+
+.owner-move-mode [data-owner-movable="true"] {
+  cursor: move !important;
+  touch-action: none;
+  user-select: none;
+}
+
+.owner-move-mode [data-owner-editable="true"] {
+  cursor: move;
 }
 
 .owner-editing [data-owner-image="true"] {

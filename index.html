@@ -18,6 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+SC:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="projects.css">
 <link rel="stylesheet" href="editor.css">
 <style>
   :root{
@@ -1391,7 +1392,7 @@
 </section>
 
 <!-- 05 · SMAT -->
-<section class="slide light" data-layout="S22" data-animate="image-hero">
+<section class="slide light" data-layout="S22" data-animate="image-hero" data-project-id="case01">
   <div class="canvas-card" style="padding:0;display:flex;flex-direction:column;overflow:hidden">
     <div data-anim="img" style="position:relative;flex:0 0 58%;overflow:hidden;background:var(--paper)">
       <img src="images/05-smat-hero.jpg" data-image-slot="s22-hero-21x9" alt="云南 SMAT 旗舰馆：巨石与悬浮结构形成的通道" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%">
@@ -1421,7 +1422,7 @@
 </section>
 
 <!-- 06 · NANCHANG -->
-<section class="slide dark" data-layout="S08" data-animate="duo-mirror">
+<section class="slide dark" data-layout="S08" data-animate="duo-mirror" data-project-id="case02">
   <div class="canvas-card">
     <div class="chrome-min"><div class="l">CASE 02 · PRIVATE CLUBHOUSE</div><div class="r">06 / 18</div></div>
     <div data-anim="head" style="display:flex;flex-direction:column;gap:1.4vh">
@@ -1453,7 +1454,7 @@
 </section>
 
 <!-- 07 · YANGZHOU -->
-<section class="slide light" data-layout="S16" data-animate="field-notes">
+<section class="slide light" data-layout="S16" data-animate="field-notes" data-project-id="case03">
   <div class="canvas-card">
     <div class="chrome-min"><div class="l">CASE 03 · PRIVATE RESIDENCE</div><div class="r">07 / 18</div></div>
     <div data-anim="head" style="display:flex;flex-direction:column;gap:1.4vh;margin-bottom:2vh">
@@ -1478,7 +1479,7 @@
 </section>
 
 <!-- 08 · WENZHOU -->
-<section class="slide dark" data-layout="S22" data-animate="image-hero">
+<section class="slide dark" data-layout="S22" data-animate="image-hero" data-project-id="case04">
   <div class="canvas-card" style="padding:0;display:flex;flex-direction:column;overflow:hidden">
     <div data-anim="img" style="position:relative;flex:0 0 58%;overflow:hidden;background:var(--ink)">
       <img src="images/08-wenzhou-hero.jpg" data-image-slot="s22-hero-21x9" alt="温州人民一品私宅的客厅与城市景观" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%">
@@ -1508,7 +1509,7 @@
 </section>
 
 <!-- 09 · HANGZHOU -->
-<section class="slide light" data-layout="S08" data-animate="duo-mirror">
+<section class="slide light" data-layout="S08" data-animate="duo-mirror" data-project-id="case05">
   <div class="canvas-card">
     <div class="chrome-min"><div class="l">CASE 05 · HOSPITALITY</div><div class="r">09 / 18</div></div>
     <div data-anim="head" style="display:flex;flex-direction:column;gap:1.4vh">
@@ -1540,7 +1541,7 @@
 </section>
 
 <!-- 10 · H1 -->
-<section class="slide dark" data-layout="S22" data-animate="image-hero">
+<section class="slide dark" data-layout="S22" data-animate="image-hero" data-project-id="case06">
   <div class="canvas-card" style="padding:0;display:flex;flex-direction:column;overflow:hidden">
     <div data-anim="img" style="position:relative;flex:0 0 58%;overflow:hidden;background:var(--ink)">
       <img src="images/10-h1-hero.jpg" data-image-slot="s22-hero-21x9" alt="成都黄龙溪谷 H1 样板间的客厅" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%">
@@ -1570,7 +1571,7 @@
 </section>
 
 <!-- 11 · J1 -->
-<section class="slide light" data-layout="S08" data-animate="duo-mirror">
+<section class="slide light" data-layout="S08" data-animate="duo-mirror" data-project-id="case07">
   <div class="canvas-card">
     <div class="chrome-min"><div class="l">CASE 07 · SHOW RESIDENCE J1</div><div class="r">11 / 18</div></div>
     <div data-anim="head" style="display:flex;flex-direction:column;gap:1.4vh">
@@ -1602,7 +1603,7 @@
 </section>
 
 <!-- 12 · COMMUNITY -->
-<section class="slide dark" data-layout="S16" data-animate="field-notes">
+<section class="slide dark" data-layout="S16" data-animate="field-notes" data-project-id="case08">
   <div class="canvas-card">
     <div class="chrome-min"><div class="l">CASE 08 · COMMUNITY SPACE</div><div class="r">12 / 18</div></div>
     <div data-anim="head" style="display:flex;flex-direction:column;gap:1.4vh;margin-bottom:2vh">
@@ -2930,6 +2931,7 @@ if(motion){
   start();
 })();
 </script>
+<script src="projects.js" defer></script>
 <script src="editor.js" defer></script>
 </body>
 </html>

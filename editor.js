@@ -11,14 +11,15 @@
 
   const API = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`
   const TOKEN_KEY = "songhe_owner_session_token"
-  const selectors = [
+  const textSelectors = [
     "h1", "h2", "h3", "h4", "p", ".lead", ".visual-note",
     ".t-meta", ".t-cat", ".d-value", ".brief-title", ".brief-note",
     ".col-ttl", ".col-desc", ".name", ".desc", ".fc-title"
   ].join(",")
+  const graphicSelectors = ".dot-mat, .ring-mat, .cross-mat, .slide svg"
 
   let state = {
-    version: 1,
+    version: 2,
     updatedAt: "",
     theme: { accent: "#002FA7" },
     elements: {},
@@ -30,6 +31,8 @@
   let saving = false
   let saveAgain = false
   let editorEnabled = false
+  let moveMode = false
+  let drag = null
 
   const byId = id => document.getElementById(id)
 
@@ -54,18 +57,39 @@
       </div>
       <div class="oe-section">
         <div class="oe-status" id="oe-status">等待编辑</div>
-        <div class="oe-help" style="margin-top:9px">修改后约 2 秒自动提交，GitHub Pages 通常会在随后一分钟内更新</div>
+        <div class="oe-help" style="margin-top:9px">修改后约 2 秒自动提交，公开链接会自动更新</div>
       </div>
       <div class="oe-section">
-        <span class="oe-label">当前文字</span>
-        <div id="oe-selected" class="oe-help">点击页面中的文字进行编辑</div>
+        <span class="oe-label">编辑模式</span>
+        <div class="oe-row" style="grid-template-columns:1fr 1fr">
+          <button class="oe-btn active" id="oe-text-mode" type="button">文字编辑</button>
+          <button class="oe-btn" id="oe-move-mode" type="button">移动排版</button>
+        </div>
+        <div class="oe-help" style="margin-top:9px">移动排版可拖动文字与装饰图案，位置按画面比例保存</div>
+      </div>
+      <div class="oe-section">
+        <span class="oe-label">当前元素</span>
+        <div id="oe-selected" class="oe-help">点击页面中的文字或图案</div>
         <div class="oe-row" style="margin-top:10px">
           <button class="oe-btn" id="oe-font-down" type="button">字号 −</button>
-          <button class="oe-btn" id="oe-font-reset" type="button">重置</button>
+          <button class="oe-btn" id="oe-font-reset" type="button">重置字号</button>
           <button class="oe-btn" id="oe-font-up" type="button">字号 ＋</button>
         </div>
+        <label class="oe-label" style="margin-top:14px" for="oe-font-family">网站字体</label>
+        <select class="oe-input" id="oe-font-family">
+          <option value="">网站默认</option>
+          <option value="sans">瑞士无衬线</option>
+          <option value="zh">中文无衬线</option>
+          <option value="mono">等宽标签</option>
+        </select>
+        <button class="oe-btn" id="oe-font-unify" type="button" style="width:100%;margin-top:9px">统一网站字体</button>
         <label class="oe-label" style="margin-top:14px" for="oe-text-color">文字颜色</label>
         <input class="oe-color" id="oe-text-color" type="color" value="#0a0a0a">
+        <div class="oe-row" style="margin-top:10px">
+          <button class="oe-btn" id="oe-layer-down" type="button">下移层级</button>
+          <button class="oe-btn" id="oe-position-reset" type="button">复位位置</button>
+          <button class="oe-btn" id="oe-layer-up" type="button">上移层级</button>
+        </div>
       </div>
       <div class="oe-section">
         <label class="oe-label" for="oe-theme-color">全站强调色</label>
@@ -78,7 +102,7 @@
       </div>
       <div class="oe-section">
         <span class="oe-label">项目图片</span>
-        <div class="oe-help">直接点击页面中的图片即可选择新图片，新文件会上传到仓库并自动发布</div>
+        <div class="oe-help">点击演示页或完整项目画廊中的图片即可上传替换，图片会进入仓库并自动发布</div>
         <input id="oe-image-file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
       </div>
       <div class="oe-section">
@@ -101,26 +125,34 @@
           <button class="oe-btn" id="oe-auth-cancel" type="button">取消</button>
         </div>
         <a class="oe-btn oe-token-help" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">首次使用请创建编辑令牌</a>
-        <p class="oe-help" style="margin-top:14px;margin-bottom:0">令牌必须属于 ${CONFIG.owner}，建议仅选择 ${CONFIG.repo} 仓库并只授予 Contents Read and write</p>
+        <p class="oe-help" style="margin-top:14px;margin-bottom:0">令牌必须属于 ${CONFIG.owner}，仅选择 ${CONFIG.repo} 仓库并授予 Contents Read and write</p>
       </div>
     `
 
     const toast = document.createElement("div")
     toast.id = "owner-editor-toast"
     toast.hidden = true
-
     document.body.append(launch, panel, auth, toast)
   }
 
   function tagEditableNodes() {
     document.querySelectorAll(".slide").forEach((slide, slideIndex) => {
-      const candidates = [...slide.querySelectorAll(selectors)]
+      const candidates = [...slide.querySelectorAll(textSelectors)]
         .filter(el => !el.closest("#owner-editor-panel"))
-        .filter(el => !candidatesContainsEditableChild(el))
+        .filter(el => !containsEditableChild(el))
       candidates.forEach((el, textIndex) => {
         const id = `s${slideIndex + 1}-t${textIndex + 1}`
         el.dataset.editId = id
         el.dataset.ownerEditable = "true"
+        el.dataset.ownerMovable = "true"
+      })
+
+      const graphics = [...slide.querySelectorAll(graphicSelectors)]
+        .filter(el => !el.parentElement?.closest(graphicSelectors))
+      graphics.forEach((el, graphicIndex) => {
+        el.dataset.editId = `s${slideIndex + 1}-g${graphicIndex + 1}`
+        el.dataset.ownerMovable = "true"
+        el.dataset.ownerGraphic = "true"
       })
 
       slide.querySelectorAll("img").forEach((img, imageIndex) => {
@@ -130,8 +162,8 @@
     })
   }
 
-  function candidatesContainsEditableChild(el) {
-    return [...el.children].some(child => child.matches(selectors))
+  function containsEditableChild(el) {
+    return [...el.children].some(child => child.matches(textSelectors))
   }
 
   async function loadState() {
@@ -140,15 +172,16 @@
       if (!response.ok) return
       const loaded = await response.json()
       state = {
-        version: 1,
+        version: 2,
         updatedAt: loaded.updatedAt || "",
         theme: loaded.theme || { accent: "#002FA7" },
         elements: loaded.elements || {},
         images: loaded.images || {}
       }
     } catch {
-      // 首次部署或离线预览时使用页面内默认内容
+      state.version = 2
     }
+    window.__ownerImageOverrides = state.images
   }
 
   function applyState() {
@@ -160,9 +193,16 @@
     Object.entries(state.elements).forEach(([id, value]) => {
       const el = document.querySelector(`[data-edit-id="${cssEscape(id)}"]`)
       if (!el) return
-      if (typeof value.html === "string") el.innerHTML = value.html
+      if (typeof value.html === "string" && el.dataset.ownerEditable === "true") el.innerHTML = value.html
       if (value.fontSize) el.style.fontSize = value.fontSize
       if (value.color) el.style.color = value.color
+      if (value.fontFamily) el.style.fontFamily = fontValue(value.fontFamily)
+      if (Number.isFinite(value.x)) el.style.setProperty("--owner-x", `${value.x}vw`)
+      if (Number.isFinite(value.y)) el.style.setProperty("--owner-y", `${value.y}vh`)
+      if (Number.isFinite(value.zIndex)) {
+        el.style.position = value.position || computedPosition(el)
+        el.style.zIndex = String(value.zIndex)
+      }
     })
 
     Object.entries(state.images).forEach(([id, src]) => {
@@ -176,8 +216,19 @@
   }
 
   function normalizeColor(value) {
-    if (/^#[0-9a-f]{6}$/i.test(value || "")) return value
-    return "#0a0a0a"
+    return /^#[0-9a-f]{6}$/i.test(value || "") ? value : "#0a0a0a"
+  }
+
+  function fontValue(key) {
+    if (key === "mono") return "var(--mono)"
+    if (key === "zh") return "var(--sans-zh)"
+    if (key === "sans") return "var(--sans), var(--sans-zh)"
+    return ""
+  }
+
+  function computedPosition(el) {
+    const current = getComputedStyle(el).position
+    return current === "static" ? "relative" : current
   }
 
   function enableOwnerEditing() {
@@ -185,23 +236,34 @@
     document.body.classList.add("owner-editing")
     byId("owner-editor-panel").hidden = false
     byId("owner-editor-launch").hidden = true
-    document.querySelectorAll('[data-owner-editable="true"]').forEach(el => {
-      el.contentEditable = "true"
-      el.spellcheck = false
-    })
+    setMode(false)
     showToast("本人编辑已开启")
   }
 
   function disableOwnerEditing() {
     editorEnabled = false
-    document.body.classList.remove("owner-editing")
+    moveMode = false
+    document.body.classList.remove("owner-editing", "owner-move-mode")
     byId("owner-editor-panel").hidden = true
     byId("owner-editor-launch").hidden = false
     document.querySelectorAll('[data-owner-editable="true"]').forEach(el => {
       el.contentEditable = "false"
       delete el.dataset.ownerSelected
     })
+    document.querySelectorAll('[data-owner-selected="true"]').forEach(el => delete el.dataset.ownerSelected)
     selected = null
+  }
+
+  function setMode(nextMoveMode) {
+    moveMode = Boolean(nextMoveMode)
+    document.body.classList.toggle("owner-move-mode", moveMode)
+    byId("oe-text-mode").classList.toggle("active", !moveMode)
+    byId("oe-move-mode").classList.toggle("active", moveMode)
+    document.querySelectorAll('[data-owner-editable="true"]').forEach(el => {
+      el.contentEditable = moveMode ? "false" : "true"
+      el.spellcheck = false
+    })
+    showToast(moveMode ? "移动排版模式" : "文字编辑模式")
   }
 
   async function authenticate(candidate) {
@@ -253,11 +315,7 @@
   }
 
   async function putRepoFile(path, base64Content, message, sha = "") {
-    const body = {
-      message,
-      content: base64Content,
-      branch: CONFIG.branch
-    }
+    const body = { message, content: base64Content, branch: CONFIG.branch }
     if (sha) body.sha = sha
     const response = await fetch(`${API}/contents/${encodePath(path)}`, {
       method: "PUT",
@@ -288,6 +346,7 @@
     saveAgain = false
     setStatus("saving", "正在提交到 GitHub")
     try {
+      state.version = 2
       state.updatedAt = new Date().toISOString()
       const current = await getRepoFile(CONFIG.dataPath)
       const json = JSON.stringify(state, null, 2) + "\n"
@@ -308,13 +367,17 @@
     }
   }
 
+  function ensureElementState(el) {
+    const id = el?.dataset.editId
+    if (!id) return null
+    state.elements[id] = state.elements[id] || {}
+    return state.elements[id]
+  }
+
   function captureElement(el) {
-    const id = el.dataset.editId
-    if (!id) return
-    state.elements[id] = {
-      ...(state.elements[id] || {}),
-      html: el.innerHTML
-    }
+    const item = ensureElementState(el)
+    if (!item) return
+    item.html = el.innerHTML
     scheduleSave()
   }
 
@@ -322,46 +385,130 @@
     if (selected) delete selected.dataset.ownerSelected
     selected = el
     selected.dataset.ownerSelected = "true"
-    const label = el.innerText.trim().replace(/\s+/g, " ").slice(0, 42) || el.dataset.editId
+    const isGraphic = el.dataset.ownerGraphic === "true"
+    const label = isGraphic
+      ? `图案 ${el.dataset.editId}`
+      : (el.innerText || "").trim().replace(/\s+/g, " ").slice(0, 42) || el.dataset.editId
     byId("oe-selected").textContent = label
     byId("oe-text-color").value = rgbToHex(getComputedStyle(el).color)
+    const savedFont = state.elements[el.dataset.editId]?.fontFamily || ""
+    byId("oe-font-family").value = savedFont
   }
 
   function changeSelectedSize(delta) {
-    if (!selected) return
-    const id = selected.dataset.editId
+    if (!selected || selected.dataset.ownerEditable !== "true") return
+    const item = ensureElementState(selected)
     const current = parseFloat(getComputedStyle(selected).fontSize)
-    const next = Math.max(12, Math.min(180, current + delta))
+    const next = Math.max(10, Math.min(180, current + delta))
     selected.style.fontSize = `${Math.round(next)}px`
-    state.elements[id] = {
-      ...(state.elements[id] || {}),
-      html: selected.innerHTML,
-      fontSize: selected.style.fontSize
-    }
+    item.html = selected.innerHTML
+    item.fontSize = selected.style.fontSize
     scheduleSave()
   }
 
   function resetSelectedSize() {
-    if (!selected) return
-    const id = selected.dataset.editId
+    if (!selected || selected.dataset.ownerEditable !== "true") return
+    const item = ensureElementState(selected)
     selected.style.removeProperty("font-size")
-    state.elements[id] = {
-      ...(state.elements[id] || {}),
-      html: selected.innerHTML
-    }
-    delete state.elements[id].fontSize
+    item.html = selected.innerHTML
+    delete item.fontSize
     scheduleSave()
   }
 
   function changeSelectedColor(color) {
     if (!selected) return
-    const id = selected.dataset.editId
+    const item = ensureElementState(selected)
     selected.style.color = color
-    state.elements[id] = {
-      ...(state.elements[id] || {}),
-      html: selected.innerHTML,
-      color
+    item.color = color
+    if (selected.dataset.ownerEditable === "true") item.html = selected.innerHTML
+    scheduleSave()
+  }
+
+  function changeSelectedFont(key) {
+    if (!selected || selected.dataset.ownerEditable !== "true") return
+    const item = ensureElementState(selected)
+    if (key) {
+      selected.style.fontFamily = fontValue(key)
+      item.fontFamily = key
+    } else {
+      selected.style.removeProperty("font-family")
+      delete item.fontFamily
     }
+    item.html = selected.innerHTML
+    scheduleSave()
+  }
+
+  function unifySiteFont() {
+    document.querySelectorAll('[data-owner-editable="true"]').forEach(el => {
+      const item = ensureElementState(el)
+      const key = el.matches(".t-meta, .mono") ? "mono" : "sans"
+      el.style.fontFamily = fontValue(key)
+      item.fontFamily = key
+      item.html = el.innerHTML
+    })
+    scheduleSave()
+    showToast("已统一为网站字体体系")
+  }
+
+  function changeLayer(delta) {
+    if (!selected) return
+    const item = ensureElementState(selected)
+    const current = Number.parseInt(getComputedStyle(selected).zIndex, 10)
+    const next = Math.max(0, Math.min(999, (Number.isFinite(current) ? current : 1) + delta))
+    selected.style.position = computedPosition(selected)
+    selected.style.zIndex = String(next)
+    item.zIndex = next
+    item.position = selected.style.position
+    scheduleSave()
+  }
+
+  function resetPosition() {
+    if (!selected) return
+    const item = ensureElementState(selected)
+    selected.style.removeProperty("--owner-x")
+    selected.style.removeProperty("--owner-y")
+    selected.style.removeProperty("z-index")
+    delete item.x
+    delete item.y
+    delete item.zIndex
+    delete item.position
+    scheduleSave()
+    showToast("位置已复位")
+  }
+
+  function beginDrag(event, el) {
+    if (!editorEnabled || !moveMode || event.button !== 0) return
+    event.preventDefault()
+    event.stopPropagation()
+    selectElement(el)
+    const item = ensureElementState(el)
+    drag = {
+      el,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: Number(item.x) || 0,
+      originY: Number(item.y) || 0
+    }
+    el.setPointerCapture?.(event.pointerId)
+  }
+
+  function moveDrag(event) {
+    if (!drag || event.pointerId !== drag.pointerId) return
+    event.preventDefault()
+    const x = drag.originX + ((event.clientX - drag.startX) / window.innerWidth) * 100
+    const y = drag.originY + ((event.clientY - drag.startY) / window.innerHeight) * 100
+    const item = ensureElementState(drag.el)
+    item.x = Math.round(x * 1000) / 1000
+    item.y = Math.round(y * 1000) / 1000
+    drag.el.style.setProperty("--owner-x", `${item.x}vw`)
+    drag.el.style.setProperty("--owner-y", `${item.y}vh`)
+  }
+
+  function endDrag(event) {
+    if (!drag || event.pointerId !== drag.pointerId) return
+    drag.el.releasePointerCapture?.(event.pointerId)
+    drag = null
     scheduleSave()
   }
 
@@ -384,6 +531,7 @@
     await putRepoFile(path, base64, `Upload image for ${id}`)
     selected.src = dataUrl
     state.images[id] = path
+    window.__ownerImageOverrides = state.images
     await saveState()
   }
 
@@ -447,15 +595,19 @@
       }
     })
 
-    byId("oe-auth-cancel").addEventListener("click", () => {
-      byId("owner-editor-auth").hidden = true
-    })
-
+    byId("oe-auth-cancel").addEventListener("click", () => { byId("owner-editor-auth").hidden = true })
     byId("oe-close").addEventListener("click", disableOwnerEditing)
+    byId("oe-text-mode").addEventListener("click", () => setMode(false))
+    byId("oe-move-mode").addEventListener("click", () => setMode(true))
     byId("oe-font-down").addEventListener("click", () => changeSelectedSize(-2))
     byId("oe-font-up").addEventListener("click", () => changeSelectedSize(2))
     byId("oe-font-reset").addEventListener("click", resetSelectedSize)
+    byId("oe-font-family").addEventListener("change", event => changeSelectedFont(event.target.value))
+    byId("oe-font-unify").addEventListener("click", unifySiteFont)
     byId("oe-text-color").addEventListener("input", event => changeSelectedColor(event.target.value))
+    byId("oe-layer-down").addEventListener("click", () => changeLayer(-1))
+    byId("oe-layer-up").addEventListener("click", () => changeLayer(1))
+    byId("oe-position-reset").addEventListener("click", resetPosition)
     byId("oe-theme-color").addEventListener("input", event => {
       state.theme.accent = event.target.value
       document.documentElement.style.setProperty("--accent", event.target.value)
@@ -491,17 +643,33 @@
         byId("oe-image-file").click()
         return
       }
-      const editable = event.target.closest('[data-owner-editable="true"]')
-      if (editable) {
+      const movable = event.target.closest('[data-owner-movable="true"]')
+      if (movable) {
         event.stopPropagation()
-        selectElement(editable)
+        selectElement(movable)
       }
     }, true)
 
     document.addEventListener("input", event => {
       const editable = event.target.closest?.('[data-owner-editable="true"]')
-      if (editorEnabled && editable) captureElement(editable)
+      if (editorEnabled && !moveMode && editable) captureElement(editable)
     })
+
+    document.addEventListener("paste", event => {
+      const editable = event.target.closest?.('[data-owner-editable="true"]')
+      if (!editorEnabled || moveMode || !editable) return
+      event.preventDefault()
+      const plain = event.clipboardData?.getData("text/plain") || ""
+      document.execCommand("insertText", false, plain)
+    })
+
+    document.addEventListener("pointerdown", event => {
+      const movable = event.target.closest?.('[data-owner-movable="true"]')
+      if (movable) beginDrag(event, movable)
+    }, true)
+    document.addEventListener("pointermove", moveDrag, true)
+    document.addEventListener("pointerup", endDrag, true)
+    document.addEventListener("pointercancel", endDrag, true)
 
     byId("oe-image-file").addEventListener("change", async event => {
       const file = event.target.files?.[0]
@@ -530,7 +698,6 @@
     await loadState()
     applyState()
     bindEvents()
-
     const editRequested = new URLSearchParams(location.search).get("edit") === "1"
     if (editRequested) {
       byId("owner-editor-launch").hidden = false
