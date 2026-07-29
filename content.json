@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-07-29T09:24:55.549Z",
+  "updatedAt": "2026-07-29T09:24:57.647Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -47,7 +47,7 @@
       "html": "立足上海，面向国际视野<br>以地域、材料与人的体验塑造具有长期价值的室内空间"
     },
     "s2-t1": {
-      "html": "我们以设计回应地域，<br><span style=\"color:var(--accent)\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;材料与人</span>"
+      "html": "我们以设计回应地域，<br><span style=\"color:var(--accent)\">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;材料与人</span>"
     }
   },
   "images": {}
