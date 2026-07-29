@@ -1,9 +1,14 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-29T07:41:25.254Z",
+  "updatedAt": "2026-07-29T07:41:40.690Z",
   "theme": {
     "accent": "#002FA7"
   },
-  "elements": {},
+  "elements": {
+    "s4-t3": {
+      "html": "Listen 倾听",
+      "color": "#000a0a"
+    }
+  },
   "images": {}
 }
