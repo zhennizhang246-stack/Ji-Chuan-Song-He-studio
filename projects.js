@@ -152,6 +152,105 @@
     })
   }
 
+  function createMobilePortfolio() {
+    const portfolio = document.createElement("main")
+    portfolio.className = "mobile-project-portfolio"
+    portfolio.id = "mobile-project-portfolio"
+    portfolio.setAttribute("aria-label", "纪川松禾完整项目作品集")
+
+    const projectEntries = Object.entries(PROJECTS)
+    const projectNav = projectEntries.map(([projectId, project], index) => (
+      `<a href="#mobile-${projectId}"><span>${String(index + 1).padStart(2, "0")}</span>${project.region.split(" ").slice(-1)[0]}</a>`
+    )).join("")
+
+    const projectArticles = projectEntries.map(([projectId, project], index) => {
+      const scenes = project.images.map((imageName, sceneIndex) => {
+        const imageId = `${projectId}-gallery-img${sceneIndex + 1}`
+        return `
+          <figure class="mobile-project-scene">
+            <img
+              src="${imagePath(projectId, sceneIndex)}"
+              alt="${project.region} ${project.scenes[sceneIndex]}"
+              loading="${index < 1 ? "eager" : "lazy"}"
+              data-image-id="${imageId}"
+              data-owner-image="true"
+            >
+            <figcaption>
+              <span>SCENE ${String(sceneIndex + 1).padStart(2, "0")}</span>
+              <strong>${project.scenes[sceneIndex]}</strong>
+            </figcaption>
+          </figure>
+        `
+      }).join("")
+
+      return `
+        <article class="mobile-project-entry" id="mobile-${projectId}">
+          <header class="mobile-project-head">
+            <div class="mobile-project-number">${String(index + 1).padStart(2, "0")} / ${String(projectEntries.length).padStart(2, "0")}</div>
+            <div class="mobile-project-kicker">${project.caseLabel}</div>
+            <h2>${project.title}</h2>
+            <div class="mobile-project-meta">
+              <span>REGION<br><strong>${project.region}</strong></span>
+              <span>AUTHOR<br><strong>${project.author}</strong></span>
+            </div>
+          </header>
+
+          <section class="mobile-project-story">
+            <div class="mobile-project-story-label">DESIGN CONCEPT</div>
+            <h3>${project.concept}</h3>
+            <div class="mobile-project-story-label">WHY THIS DESIGN</div>
+            <p>${project.story}</p>
+          </section>
+
+          <section class="mobile-project-materials">
+            <div class="mobile-project-story-label">MATERIAL PALETTE</div>
+            <div>${project.materials.map(item => `<span>${item}</span>`).join("")}</div>
+          </section>
+
+          <section class="mobile-project-scenes" aria-label="${project.title}完整项目图片">
+            ${scenes}
+          </section>
+        </article>
+      `
+    }).join("")
+
+    portfolio.innerHTML = `
+      <header class="mobile-portfolio-cover">
+        <div class="mobile-portfolio-topline">
+          <span>JI CHUAN SONG HE STUDIO</span>
+          <span>SHANGHAI · 2026</span>
+        </div>
+        <div class="mobile-portfolio-title">
+          <div>INTERNATIONAL INTERIOR DESIGN PORTFOLIO</div>
+          <h1>纪川松禾<br><em>室内设计事务所</em></h1>
+          <p>以地域 材料 光与人的体验<br>讲述每一个空间为什么如此发生</p>
+        </div>
+        <div class="mobile-portfolio-authors">DESIGN AUTHORS · SXJ MX ZMJ</div>
+      </header>
+
+      <nav class="mobile-portfolio-nav" aria-label="项目目录">
+        ${projectNav}
+      </nav>
+
+      <section class="mobile-portfolio-intro">
+        <div>SELECTED WORKS · 08 PROJECTS</div>
+        <h2>完整项目<br>连续阅读</h2>
+        <p>向下滑动查看每个项目的地区 材质 设计理念 设计故事与全部空间图片</p>
+      </section>
+
+      ${projectArticles}
+
+      <footer class="mobile-portfolio-footer">
+        <div>JI CHUAN SONG HE STUDIO · SHANGHAI</div>
+        <h2>空间回应地域<br>材料回应时间<br>设计回应生活</h2>
+        <p>DESIGN AUTHORS · SXJ MX ZMJ</p>
+        <a href="#mobile-project-portfolio">返回顶部 ↑</a>
+      </footer>
+    `
+
+    document.body.insertBefore(portfolio, document.getElementById("project-gallery"))
+  }
+
   function openGallery(projectId, trigger) {
     const project = PROJECTS[projectId]
     if (!project) return
@@ -234,6 +333,7 @@
 
   function boot() {
     createGallery()
+    createMobilePortfolio()
     bindCases()
     bindKeyboard()
     window.SONGHE_PROJECTS = PROJECTS

@@ -2,6 +2,10 @@
   --project-panel: min(30vw, 470px);
 }
 
+.mobile-project-portfolio {
+  display: none;
+}
+
 .project-gallery-trigger {
   position: absolute;
   z-index: 36;
