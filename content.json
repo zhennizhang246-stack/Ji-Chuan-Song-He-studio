@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-29T07:45:26.202Z",
+  "updatedAt": "2026-07-29T07:45:31.596Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -18,7 +18,7 @@
       "color": "#5b7bff"
     },
     "s18-t5": {
-      "html": "设计人的关系"
+      "html": "设计关系"
     }
   },
   "images": {}
