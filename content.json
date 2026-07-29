@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-29T07:41:43.627Z",
+  "updatedAt": "2026-07-29T07:41:47.105Z",
   "theme": {
     "accent": "#002FA7"
   },
   "elements": {
     "s4-t3": {
       "html": "Listen 倾听",
-      "color": "#002f0a"
+      "color": "#002fa7"
     }
   },
   "images": {}
