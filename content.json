@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-29T07:48:14.346Z",
+  "updatedAt": "2026-07-29T07:48:19.691Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -33,7 +33,7 @@
       "html": "纪川松禾工作室 · SHANGHAI"
     },
     "s18-t2": {
-      "html": "让每个空间<br>都有一个<br><span style=\"font-style:italic;font-weight:300\">必须如此</span>的设计理由"
+      "html": "让每个空间<br>都有一个<span style=\"font-style:italic;font-weight:300\">必须</span><div><span style=\"font-style:italic;font-weight:300\">如此</span>的设计理由</div>"
     }
   },
   "images": {}
