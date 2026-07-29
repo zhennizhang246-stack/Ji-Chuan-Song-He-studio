@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-07-29T09:29:22.960Z",
+  "updatedAt": "2026-07-29T09:30:03.426Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -64,6 +64,9 @@
     "s13-t1": {
       "html": "不同的项目，<br><span style=\"color:var(--accent)\">有着不同的设计理念打造</span>",
       "fontSize": "126px"
+    },
+    "s13-t2": {
+      "html": "工作室不复制统一风格，而以的方法回应不同城市、功能与生活方式"
     }
   },
   "images": {}
