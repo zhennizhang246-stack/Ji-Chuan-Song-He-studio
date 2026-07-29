@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-29T07:46:36.682Z",
+  "updatedAt": "2026-07-29T07:46:55.498Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -21,7 +21,8 @@
       "html": "设计关系"
     },
     "s18-t4": {
-      "html": "01 · TEAM"
+      "html": "01 · TEAM",
+      "color": "#002fa7"
     }
   },
   "images": {}
