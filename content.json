@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-29T07:48:56.074Z",
+  "updatedAt": "2026-07-29T07:49:09.604Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -34,6 +34,9 @@
     },
     "s18-t2": {
       "html": "让每个空间<br>都有一个<span style=\"font-style:italic;font-weight:300\">必须</span><div><span style=\"font-style:italic;font-weight:300\">如此</span>的设计理由</div>"
+    },
+    "s18-t8": {
+      "html": "设计体验的顺序"
     }
   },
   "images": {}
