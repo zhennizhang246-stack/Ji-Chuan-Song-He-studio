@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-07-29T09:29:00.445Z",
+  "updatedAt": "2026-07-29T09:29:07.696Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -62,7 +62,7 @@
       "html": "SXJ MX ZMJ"
     },
     "s13-t1": {
-      "html": "不同的项目，<br><span style=\"color:var(--accent)\">有不同的设计理念</span>"
+      "html": "不同的项目，<br><span style=\"color:var(--accent)\">有不同的设计理念打造</span>"
     }
   },
   "images": {}
