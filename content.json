@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-07-29T09:27:22.452Z",
+  "updatedAt": "2026-07-29T09:27:32.579Z",
   "theme": {
     "accent": "#002FA7"
   },
@@ -56,6 +56,9 @@
       "html": "SXJ MX ZMJ"
     },
     "s8-t4": {
+      "html": "SXJ MX ZMJ"
+    },
+    "s10-t4": {
       "html": "SXJ MX ZMJ"
     }
   },
