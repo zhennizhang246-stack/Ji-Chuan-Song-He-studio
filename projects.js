@@ -312,6 +312,33 @@
       const projectId = section.dataset.projectId
       const project = PROJECTS[projectId]
       if (!project) return
+
+      const preview = document.createElement("div")
+      preview.className = "project-preview-dock"
+      preview.setAttribute("aria-label", `${project.title}全部项目图片`)
+      preview.innerHTML = project.images.map((_, imageIndex) => {
+        const imageId = `${projectId}-gallery-img${imageIndex + 1}`
+        return `
+          <button class="project-preview-item" type="button" data-preview-index="${imageIndex}" aria-label="查看${project.scenes[imageIndex]}">
+            <img
+              src="${imagePath(projectId, imageIndex)}"
+              alt="${project.region} ${project.scenes[imageIndex]}"
+              loading="lazy"
+              data-image-id="${imageId}"
+              data-owner-image="true"
+            >
+            <span>${String(imageIndex + 1).padStart(2, "0")}</span>
+          </button>
+        `
+      }).join("")
+      preview.querySelectorAll("[data-preview-index]").forEach(button => {
+        button.addEventListener("click", () => {
+          openGallery(projectId, button)
+          showScene(Number(button.dataset.previewIndex))
+        })
+      })
+      section.appendChild(preview)
+
       const button = document.createElement("button")
       button.className = "project-gallery-trigger"
       button.type = "button"
